@@ -58,29 +58,29 @@ uint16_t getValue(uchar b[]){
 	return result;
 }
 
-uint16_t powOf10(uint8_t pow){
+uint16_t powOf10(uint8_t pow) {
 	uint16_t result = 10;
-	for(uint8_t i = 0;i<=pow;i++){
-		result*=result;
+	for (uint8_t i = 0; i < pow-1; i++) {
+		result *= 10;
 	}
 	return result;
 }
 
-void updateFiveDigitsReply(uint16_t value){
-	uint8_t remainder = 0;
-	uint8_t values[5] = {0,0,0,0,0};
-	for(uint8_t i = 4; i>0; i--){
-		uint16_t ref = powOf10(i);
-		if(value>=ref){
+void updateFiveDigitsReply(uint16_t value) {
+	uint16_t remainder = 0;
+	uint8_t values[5] = { 0,0,0,0,0 };
+	for (uint8_t i = 5; i > 0; i--) {
+		uint16_t ref = powOf10(i-1);
+		if (value >= ref) {
 			remainder = value % ref;
-			values[i] = (value - remainder)/ref;
-			value -= ref * values[i];
+			values[i-1] = (value - remainder) / ref;
+			value -= ref * values[i-1];
 		}
 	}
-	values[0]=value;
+	values[0] = value;
 	uint8_t r = 0;
-	for(uint8_t v = 4;v>=0;v--){
-		replyFiveDigits[r] = values[v]+48;
+	for (uint8_t v = 5; v > 0; v--) {
+		replyFiveDigits[r] = values[v-1] + 48;
 		r++;
 	}
 }
